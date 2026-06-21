@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
-import 'dart:math';
 import '../models/cube_model.dart';
 import '../services/color_detection_service.dart';
 import '../services/cube_provider.dart';
@@ -103,7 +102,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
     if (_camController != null && _cameraReady) {
       try {
-        final image = await _camController!.takePicture();
+        await _camController!.takePicture();
         // In production: use image bytes + ColorDetectionService.detectColorsFromPixels
         // For now, use simulation (integrating real detection needs native plugin)
         detectedColors = ColorDetectionService.simulateDetection(face);
@@ -143,8 +142,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     if (scanned.length >= 6) return null;
     return ref.read(currentFaceProvider);
   }
-
-  bool get _allScanned => ref.read(scannedFacesProvider).length >= 6;
 
   @override
   void dispose() {
@@ -213,14 +210,15 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                 CircularProgressIndicator(
                   value: scannedCount / 6,
                   backgroundColor: Colors.white12,
-                  valueColor:
-                      const AlwaysStoppedAnimation(Colors.cyanAccent),
+                  valueColor: const AlwaysStoppedAnimation(Colors.cyanAccent),
                   strokeWidth: 3,
                 ),
                 Text(
                   '$scannedCount/6',
                   style: const TextStyle(
-                      color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -287,7 +285,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             margin: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              color: Colors.greenAccent.withOpacity(0.15),
+              color: Colors.greenAccent.withValues(alpha: 0.15),
             ),
             child: const Center(
               child: Column(
@@ -315,7 +313,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: Colors.white12),
               ),
@@ -341,7 +339,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       decoration: BoxDecoration(
         gradient: RadialGradient(
           colors: [
-            Color(face.expectedCenterColor.colorValue).withOpacity(0.3),
+            Color(face.expectedCenterColor.colorValue).withValues(alpha: 0.3),
             const Color(0xFF0A0A1A),
           ],
         ),
@@ -458,9 +456,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.greenAccent.withOpacity(0.1),
+                color: Colors.greenAccent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.greenAccent.withOpacity(0.3)),
+                border: Border.all(
+                    color: Colors.greenAccent.withValues(alpha: 0.3)),
               ),
               child: const Row(
                 children: [
@@ -481,8 +480,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (_) => const SolutionScreen()),
+                    MaterialPageRoute(builder: (_) => const SolutionScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
