@@ -18,7 +18,6 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
     with TickerProviderStateMixin {
   late AnimationController _solveAnimController;
   int _currentStep = 0;
-  bool _isAnimating = false;
   bool _isPlaying = false;
 
   @override
@@ -141,10 +140,10 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
   }
 
   Widget _buildSolutionView(SolveSolution solution, CubeState cubeState) {
-    final currentStep = solution.steps.isNotEmpty &&
-            _currentStep < solution.steps.length
-        ? solution.steps[_currentStep]
-        : null;
+    final currentStep =
+        solution.steps.isNotEmpty && _currentStep < solution.steps.length
+            ? solution.steps[_currentStep]
+            : null;
 
     return Column(
       children: [
@@ -159,7 +158,7 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
               Cube3DWidget(
                 cubeState: cubeState,
                 size: 220,
-                animate: _isPlaying,
+                autoRotate: _isPlaying,
                 highlightMove: currentStep?.move,
               ),
               if (currentStep != null)
@@ -215,13 +214,12 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
             ),
           ),
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.greenAccent.withOpacity(0.15),
+              color: Colors.greenAccent.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                  color: Colors.greenAccent.withOpacity(0.4)),
+              border:
+                  Border.all(color: Colors.greenAccent.withValues(alpha: 0.4)),
             ),
             child: Row(
               children: [
@@ -230,8 +228,8 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
                 const SizedBox(width: 4),
                 Text(
                   '${solution.totalMoves} moves',
-                  style: const TextStyle(
-                      color: Colors.greenAccent, fontSize: 12),
+                  style:
+                      const TextStyle(color: Colors.greenAccent, fontSize: 12),
                 ),
               ],
             ),
@@ -245,16 +243,15 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.8),
+        color: Colors.black.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.cyanAccent.withOpacity(0.5)),
+        border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               color: Colors.cyanAccent,
               borderRadius: BorderRadius.circular(6),
@@ -272,8 +269,7 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
           const SizedBox(width: 8),
           Text(
             step.description,
-            style:
-                const TextStyle(color: Colors.white70, fontSize: 12),
+            style: const TextStyle(color: Colors.white70, fontSize: 12),
           ),
         ],
       ),
@@ -287,12 +283,11 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
         children: [
           _statChip(Icons.list_alt, '${solution.totalMoves}', 'Moves'),
           const SizedBox(width: 8),
-          _statChip(Icons.timer, '${solution.solveTime.inMilliseconds}ms', 'Solve Time'),
+          _statChip(Icons.timer, '${solution.solveTime.inMilliseconds}ms',
+              'Solve Time'),
           const SizedBox(width: 8),
-          _statChip(
-              Icons.navigate_next,
-              '${_currentStep + 1}/${solution.steps.length}',
-              'Progress'),
+          _statChip(Icons.navigate_next,
+              '${_currentStep + 1}/${solution.steps.length}', 'Progress'),
         ].map((w) => Expanded(child: w)).toList(),
       ),
     );
@@ -302,7 +297,7 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.white10),
       ),
@@ -324,8 +319,7 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
             ],
           ),
           Text(label,
-              style:
-                  const TextStyle(color: Colors.white38, fontSize: 10)),
+              style: const TextStyle(color: Colors.white38, fontSize: 10)),
         ],
       ),
     );
@@ -335,7 +329,7 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.03),
+        color: Colors.white.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white10),
       ),
@@ -352,16 +346,15 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               margin: const EdgeInsets.symmetric(vertical: 3),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
                 color: isActive
-                    ? Colors.cyanAccent.withOpacity(0.15)
+                    ? Colors.cyanAccent.withValues(alpha: 0.15)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: isActive
-                      ? Colors.cyanAccent.withOpacity(0.5)
+                      ? Colors.cyanAccent.withValues(alpha: 0.5)
                       : Colors.transparent,
                 ),
               ),
@@ -387,13 +380,13 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
                   // Move badge
                   Container(
                     width: 44,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 6, vertical: 3),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
                       color: isActive
                           ? Colors.cyanAccent
                           : isDone
-                              ? Colors.greenAccent.withOpacity(0.2)
+                              ? Colors.greenAccent.withValues(alpha: 0.2)
                               : Colors.white10,
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -416,9 +409,7 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
                     child: Text(
                       step.description,
                       style: TextStyle(
-                        color: isActive
-                            ? Colors.white
-                            : Colors.white60,
+                        color: isActive ? Colors.white : Colors.white60,
                         fontSize: 12,
                       ),
                     ),
@@ -484,9 +475,7 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
           // Next
           _controlButton(
             icon: Icons.skip_next,
-            onTap: _currentStep < solution.steps.length - 1
-                ? _nextStep
-                : null,
+            onTap: _currentStep < solution.steps.length - 1 ? _nextStep : null,
             tooltip: 'Next',
           ),
         ],
@@ -508,14 +497,14 @@ class _SolutionScreenState extends ConsumerState<SolutionScreen>
           height: 46,
           decoration: BoxDecoration(
             color: onTap != null
-                ? Colors.white.withOpacity(0.1)
-                : Colors.white.withOpacity(0.04),
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.white.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.white12),
           ),
           child: Icon(
             icon,
-            color: onTap != null ? Colors.white70 : Colors.white20,
+            color: onTap != null ? Colors.white70 : Colors.white24,
             size: 22,
           ),
         ),
