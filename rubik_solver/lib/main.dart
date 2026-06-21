@@ -36,8 +36,7 @@ class CubeSolverApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.cyanAccent,
           brightness: Brightness.dark,
-          background: const Color(0xFF0A0A1A),
-          surface: const Color(0xFF12122A),
+          surface: const Color(0xFF0A0A1A),
         ),
         scaffoldBackgroundColor: const Color(0xFF0A0A1A),
         fontFamily: 'Roboto',
@@ -75,13 +74,12 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     _ctrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1200));
-    _scaleAnim =
-        Tween(begin: 0.6, end: 1.0).animate(CurvedAnimation(
-          parent: _ctrl,
-          curve: Curves.elasticOut,
-        ));
-    _fadeAnim = Tween(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _ctrl, curve: const Interval(0, 0.5)));
+    _scaleAnim = Tween(begin: 0.6, end: 1.0).animate(CurvedAnimation(
+      parent: _ctrl,
+      curve: Curves.elasticOut,
+    ));
+    _fadeAnim = Tween(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _ctrl, curve: const Interval(0, 0.5)));
     _ctrl.forward();
     _navigate();
   }
@@ -122,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen>
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.cyanAccent.withOpacity(0.3),
+                        color: Colors.cyanAccent.withValues(alpha: 0.3),
                         blurRadius: 30,
                         spreadRadius: 5,
                       ),
@@ -158,8 +156,7 @@ class _SplashScreenState extends State<SplashScreen>
                   width: 28,
                   height: 28,
                   child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation(Colors.cyanAccent),
+                    valueColor: AlwaysStoppedAnimation(Colors.cyanAccent),
                     strokeWidth: 2,
                   ),
                 ),
