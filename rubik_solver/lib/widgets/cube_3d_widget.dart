@@ -7,14 +7,14 @@ import '../models/cube_model.dart';
 class Cube3DWidget extends StatefulWidget {
   final CubeState cubeState;
   final double size;
-  final bool animate;
+  final bool autoRotate;
   final String? highlightMove;
 
   const Cube3DWidget({
     super.key,
     required this.cubeState,
     this.size = 200,
-    this.animate = false,
+    this.autoRotate = false,
     this.highlightMove,
   });
 
@@ -26,7 +26,6 @@ class _Cube3DWidgetState extends State<Cube3DWidget>
     with TickerProviderStateMixin {
   late AnimationController _rotController;
   late AnimationController _moveController;
-  late Animation<double> _rotX;
   late Animation<double> _rotY;
 
   double _baseRotX = -0.4;
@@ -49,7 +48,6 @@ class _Cube3DWidgetState extends State<Cube3DWidget>
       duration: const Duration(milliseconds: 400),
     );
 
-    _rotX = Tween(begin: 0.0, end: 0.0).animate(_rotController);
     _rotY = Tween(begin: 0.0, end: pi * 2).animate(_rotController);
   }
 
@@ -81,16 +79,14 @@ class _Cube3DWidgetState extends State<Cube3DWidget>
       },
       onPanUpdate: (d) {
         setState(() {
-          _baseRotY = _tempRotY +
-              (d.globalPosition.dx - _dragStartX) * 0.01;
-          _baseRotX = _tempRotX -
-              (d.globalPosition.dy - _dragStartY) * 0.01;
+          _baseRotY = _tempRotY + (d.globalPosition.dx - _dragStartX) * 0.01;
+          _baseRotX = _tempRotX - (d.globalPosition.dy - _dragStartY) * 0.01;
         });
       },
       child: AnimatedBuilder(
         animation: Listenable.merge([_rotController, _moveController]),
         builder: (context, _) {
-          final autoRotY = widget.animate ? _rotY.value : 0.0;
+          final autoRotY = widget.autoRotate ? _rotY.value : 0.0;
           return CustomPaint(
             size: Size(widget.size, widget.size),
             painter: _Cube3DPainter(
@@ -130,8 +126,14 @@ class _Cube3DPainter extends CustomPainter {
 
     // 8 corners of the unit cube
     final List<List<double>> verts = [
-      [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
-      [-1, -1,  1], [1, -1,  1], [1, 1,  1], [-1, 1,  1],
+      [-1, -1, -1],
+      [1, -1, -1],
+      [1, 1, -1],
+      [-1, 1, -1],
+      [-1, -1, 1],
+      [1, -1, 1],
+      [1, 1, 1],
+      [-1, 1, 1],
     ];
 
     // Apply rotation
@@ -147,22 +149,41 @@ class _Cube3DPainter extends CustomPainter {
     // 6 faces: indices into verts, face enum
     final faceDefs = [
       // face index, vertex indices, normal direction
-      {'face': CubeFace.front,  'vi': [4, 5, 6, 7]},  // +Z
-      {'face': CubeFace.back,   'vi': [0, 1, 2, 3]},  // -Z (back-culled usually)
-      {'face': CubeFace.left,   'vi': [0, 4, 7, 3]},  // -X
-      {'face': CubeFace.right,  'vi': [1, 5, 6, 2]},  // +X
-      {'face': CubeFace.up,     'vi': [3, 2, 6, 7]},  // +Y (up in cube = top)
-      {'face': CubeFace.down,   'vi': [0, 1, 5, 4]},  // -Y
+      {
+        'face': CubeFace.front,
+        'vi': [4, 5, 6, 7]
+      }, // +Z
+      {
+        'face': CubeFace.back,
+        'vi': [0, 1, 2, 3]
+      }, // -Z (back-culled usually)
+      {
+        'face': CubeFace.left,
+        'vi': [0, 4, 7, 3]
+      }, // -X
+      {
+        'face': CubeFace.right,
+        'vi': [1, 5, 6, 2]
+      }, // +X
+      {
+        'face': CubeFace.up,
+        'vi': [3, 2, 6, 7]
+      }, // +Y (up in cube = top)
+      {
+        'face': CubeFace.down,
+        'vi': [0, 1, 5, 4]
+      }, // -Y
     ];
 
     // Sort faces by average Z (painter's algorithm)
-    final facesSorted = List.from(faceDefs)..sort((a, b) {
-      final vi = a['vi'] as List;
-      final vi2 = b['vi'] as List;
-      final zA = vi.map((i) => rotated[i][2]).reduce((x, y) => x + y) / 4;
-      final zB = vi2.map((i) => rotated[i][2]).reduce((x, y) => x + y) / 4;
-      return zB.compareTo(zA);
-    });
+    final facesSorted = List.from(faceDefs)
+      ..sort((a, b) {
+        final vi = a['vi'] as List;
+        final vi2 = b['vi'] as List;
+        final zA = vi.map((i) => rotated[i][2]).reduce((x, y) => x + y) / 4;
+        final zB = vi2.map((i) => rotated[i][2]).reduce((x, y) => x + y) / 4;
+        return zB.compareTo(zA);
+      });
 
     for (final fd in facesSorted) {
       final face = fd['face'] as CubeFace;
@@ -172,12 +193,8 @@ class _Cube3DPainter extends CustomPainter {
       final v0 = rotated[vi[0]];
       final v1 = rotated[vi[1]];
       final v2 = rotated[vi[2]];
-      final nx = (v1[1] - v0[1]) * (v2[2] - v0[2]) -
-          (v1[2] - v0[2]) * (v2[1] - v0[1]);
-      final ny = (v1[2] - v0[2]) * (v2[0] - v0[0]) -
-          (v1[0] - v0[0]) * (v2[2] - v0[2]);
-      final nz = (v1[0] - v0[0]) * (v2[1] - v0[1]) -
-          (v1[1] - v0[1]) * (v2[0] - v0[0]);
+      final nz =
+          (v1[0] - v0[0]) * (v2[1] - v0[1]) - (v1[1] - v0[1]) * (v2[0] - v0[0]);
 
       // Back-face culling
       if (nz > 0) continue;
@@ -208,7 +225,8 @@ class _Cube3DPainter extends CustomPainter {
         final br = corners[2]; // bottom-right
         final bl = corners[3]; // bottom-left
 
-        Offset lerp2D(Offset a, Offset b, Offset c, Offset d, double t, double s) {
+        Offset lerp2D(
+            Offset a, Offset b, Offset c, Offset d, double t, double s) {
           final top = Offset.lerp(a, b, t)!;
           final bot = Offset.lerp(d, c, t)!;
           return Offset.lerp(top, bot, s)!;
@@ -225,8 +243,8 @@ class _Cube3DPainter extends CustomPainter {
         // Light shade
         final shade = ((-lighting + 0.3) / 1.3).clamp(0.0, 1.0);
         final baseColor = Color(cubeColor.colorValue);
-        final shadedColor = Color.lerp(
-            Colors.black, baseColor, 0.3 + shade * 0.7)!;
+        final shadedColor =
+            Color.lerp(Colors.black, baseColor, 0.3 + shade * 0.7)!;
 
         final path = Path()
           ..moveTo(p00.dx, p00.dy)
@@ -254,12 +272,17 @@ class _Cube3DPainter extends CustomPainter {
 
         // Background (black gap)
         canvas.drawPath(
-            path, Paint()..color = Colors.black..style = PaintingStyle.fill);
+            path,
+            Paint()
+              ..color = Colors.black
+              ..style = PaintingStyle.fill);
 
         // Sticker
         canvas.drawPath(
           shrunkenPath,
-          Paint()..color = shadedColor..style = PaintingStyle.fill,
+          Paint()
+            ..color = shadedColor
+            ..style = PaintingStyle.fill,
         );
       }
     }
