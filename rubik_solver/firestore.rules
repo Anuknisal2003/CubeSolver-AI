@@ -1,0 +1,23 @@
+// firestore.rules
+// Deploy with: firebase deploy --only firestore:rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Cube sessions — only owner can read/write
+    match /cube_sessions/{docId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if request.auth != null
+        && resource.data.uid == request.auth.uid;
+    }
+
+    // Solutions — owner can write, anyone can read (for leaderboard)
+    match /solutions/{docId} {
+      allow create: if request.auth != null;
+      allow read: if true;  // public leaderboard
+      allow update, delete: if request.auth != null
+        && resource.data.uid == request.auth.uid;
+    }
+  }
+}
