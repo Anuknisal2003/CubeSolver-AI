@@ -29,7 +29,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   Future<void> _loadStats() async {
     final stats = await FirebaseService.getUserStats();
-    if (mounted) setState(() { _stats = stats; _loadingStats = false; });
+    if (mounted)
+      setState(() {
+        _stats = stats;
+        _loadingStats = false;
+      });
   }
 
   @override
@@ -114,8 +118,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           Cube3DWidget(
             cubeState: cube,
             size: 180,
-            animate: true,
-          ).animate().fadeIn(duration: 600.ms).scale(begin: const Offset(0.8, 0.8)),
+            autoRotate: true,
+          )
+              .animate()
+              .fadeIn(duration: 600.ms)
+              .scale(begin: const Offset(0.8, 0.8)),
           const SizedBox(height: 20),
           const Text(
             'Scan · Solve · Learn',
@@ -152,8 +159,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   SizedBox(width: 8),
                   Text(
                     'Start Scanning',
-                    style: TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -170,7 +176,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         padding: EdgeInsets.all(16),
         child: Center(
           child: CircularProgressIndicator(
-            color: Colors.cyanAccent, strokeWidth: 2),
+              color: Colors.cyanAccent, strokeWidth: 2),
         ),
       );
     }
@@ -189,8 +195,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           _buildStatCard('Best', best != null ? '$best moves' : '-',
               Icons.emoji_events, Colors.amberAccent),
           const SizedBox(width: 10),
-          _buildStatCard(
-              'Average', avg != null ? '$avg' : '-', Icons.bar_chart, Colors.purpleAccent),
+          _buildStatCard('Average', avg != null ? '$avg' : '-', Icons.bar_chart,
+              Colors.purpleAccent),
         ].map((w) => Expanded(child: w)).toList(),
       ).animate().fadeIn(delay: 200.ms),
     );
@@ -201,9 +207,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,8 +225,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
           ),
           Text(label,
-              style:
-                  const TextStyle(color: Colors.white38, fontSize: 11)),
+              style: const TextStyle(color: Colors.white38, fontSize: 11)),
         ],
       ),
     );
@@ -279,9 +284,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.08),
+          color: color.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: color.withOpacity(0.25)),
+          border: Border.all(color: color.withValues(alpha: 0.25)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,8 +299,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     fontWeight: FontWeight.bold,
                     fontSize: 14)),
             Text(subtitle,
-                style:
-                    const TextStyle(color: Colors.white38, fontSize: 11)),
+                style: const TextStyle(color: Colors.white38, fontSize: 11)),
           ],
         ),
       ),
@@ -304,12 +308,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   Widget _buildHowItWorks() {
     final steps = [
-      ('1', Icons.camera_alt, Colors.cyanAccent,
-          'Scan', 'Point camera at each face'),
-      ('2', Icons.auto_fix_high, Colors.purpleAccent,
-          'Solve', 'AI computes optimal solution'),
-      ('3', Icons.view_in_ar, Colors.greenAccent,
-          'Follow', 'Follow 3D animated steps'),
+      (
+        '1',
+        Icons.camera_alt,
+        Colors.cyanAccent,
+        'Scan',
+        'Point camera at each face'
+      ),
+      (
+        '2',
+        Icons.auto_fix_high,
+        Colors.purpleAccent,
+        'Solve',
+        'AI computes optimal solution'
+      ),
+      (
+        '3',
+        Icons.view_in_ar,
+        Colors.greenAccent,
+        'Follow',
+        'Follow 3D animated steps'
+      ),
     ];
 
     return Padding(
@@ -335,7 +354,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               child: Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.03),
+                  color: Colors.white.withValues(alpha: 0.03),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.white10),
                 ),
@@ -345,7 +364,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.15),
+                        color: color.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(icon, color: color, size: 18),
@@ -440,8 +459,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                               style: const TextStyle(color: Colors.white)),
                           subtitle: Text(
                               s.capturedAt?.toString().split('.')[0] ?? '',
-                              style:
-                                  const TextStyle(color: Colors.white54)),
+                              style: const TextStyle(color: Colors.white54)),
                         );
                       },
                     );
@@ -505,12 +523,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: i == 0
-                                ? Colors.amberAccent.withOpacity(0.1)
-                                : Colors.white.withOpacity(0.04),
+                                ? Colors.amberAccent.withValues(alpha: 0.1)
+                                : Colors.white.withValues(alpha: 0.04),
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                                 color: i == 0
-                                    ? Colors.amberAccent.withOpacity(0.3)
+                                    ? Colors.amberAccent.withValues(alpha: 0.3)
                                     : Colors.white10),
                           ),
                           child: Row(
