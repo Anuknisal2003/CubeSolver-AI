@@ -2,7 +2,6 @@
 
 import 'dart:math';
 import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import '../models/cube_model.dart';
 
@@ -26,10 +25,10 @@ class ColorDetectionService {
         final cellLeft = detectionRect.left + col * cellW;
         final cellTop = detectionRect.top + row * cellH;
 
-        final sampleLeft   = (cellLeft + cellW * samplePad).round();
-        final sampleTop    = (cellTop  + cellH * samplePad).round();
-        final sampleRight  = (cellLeft + cellW * (1 - samplePad)).round();
-        final sampleBottom = (cellTop  + cellH * (1 - samplePad)).round();
+        final sampleLeft = (cellLeft + cellW * samplePad).round();
+        final sampleTop = (cellTop + cellH * samplePad).round();
+        final sampleRight = (cellLeft + cellW * (1 - samplePad)).round();
+        final sampleBottom = (cellTop + cellH * (1 - samplePad)).round();
 
         int rSum = 0, gSum = 0, bSum = 0, count = 0;
 
@@ -121,19 +120,61 @@ class ColorDetectionService {
     final center = face.expectedCenterColor;
     // Center is always the face color; edges/corners may vary
     return [
-      _randomNeighbor(face, 0), _randomNeighbor(face, 1), _randomNeighbor(face, 2),
-      _randomNeighbor(face, 3), center,                   _randomNeighbor(face, 5),
-      _randomNeighbor(face, 6), _randomNeighbor(face, 7), _randomNeighbor(face, 8),
+      _randomNeighbor(face, 0),
+      _randomNeighbor(face, 1),
+      _randomNeighbor(face, 2),
+      _randomNeighbor(face, 3),
+      center,
+      _randomNeighbor(face, 5),
+      _randomNeighbor(face, 6),
+      _randomNeighbor(face, 7),
+      _randomNeighbor(face, 8),
     ];
   }
 
   static final _faceNeighbors = <CubeFace, List<CubeColor>>{
-    CubeFace.up:    [CubeColor.white, CubeColor.red, CubeColor.blue, CubeColor.orange, CubeColor.green],
-    CubeFace.down:  [CubeColor.yellow, CubeColor.red, CubeColor.blue, CubeColor.orange, CubeColor.green],
-    CubeFace.front: [CubeColor.red, CubeColor.white, CubeColor.blue, CubeColor.yellow, CubeColor.green],
-    CubeFace.back:  [CubeColor.orange, CubeColor.white, CubeColor.blue, CubeColor.yellow, CubeColor.green],
-    CubeFace.left:  [CubeColor.green, CubeColor.white, CubeColor.red, CubeColor.yellow, CubeColor.orange],
-    CubeFace.right: [CubeColor.blue, CubeColor.white, CubeColor.red, CubeColor.yellow, CubeColor.orange],
+    CubeFace.up: [
+      CubeColor.white,
+      CubeColor.red,
+      CubeColor.blue,
+      CubeColor.orange,
+      CubeColor.green
+    ],
+    CubeFace.down: [
+      CubeColor.yellow,
+      CubeColor.red,
+      CubeColor.blue,
+      CubeColor.orange,
+      CubeColor.green
+    ],
+    CubeFace.front: [
+      CubeColor.red,
+      CubeColor.white,
+      CubeColor.blue,
+      CubeColor.yellow,
+      CubeColor.green
+    ],
+    CubeFace.back: [
+      CubeColor.orange,
+      CubeColor.white,
+      CubeColor.blue,
+      CubeColor.yellow,
+      CubeColor.green
+    ],
+    CubeFace.left: [
+      CubeColor.green,
+      CubeColor.white,
+      CubeColor.red,
+      CubeColor.yellow,
+      CubeColor.orange
+    ],
+    CubeFace.right: [
+      CubeColor.blue,
+      CubeColor.white,
+      CubeColor.red,
+      CubeColor.yellow,
+      CubeColor.orange
+    ],
   };
 
   static CubeColor _randomNeighbor(CubeFace face, int idx) {
@@ -165,7 +206,7 @@ class ScanGridPainter extends CustomPainter {
 
     // Outer border
     final borderPaint = Paint()
-      ..color = gridColor.withOpacity(0.8)
+      ..color = gridColor.withValues(alpha: 0.8)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0;
 
@@ -205,7 +246,7 @@ class ScanGridPainter extends CustomPainter {
     // Scan line animation
     if (isScanning) {
       final scanPaint = Paint()
-        ..color = Colors.greenAccent.withOpacity(0.7)
+        ..color = Colors.greenAccent.withValues(alpha: 0.7)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0;
 
