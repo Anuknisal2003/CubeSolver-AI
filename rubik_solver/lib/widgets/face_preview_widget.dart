@@ -62,7 +62,7 @@ class FacePreviewWidget extends StatelessWidget {
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: Colors.cyanAccent.withOpacity(0.3),
+                      color: Colors.cyanAccent.withValues(alpha: 0.3),
                       blurRadius: 8,
                     )
                   ]
@@ -96,7 +96,7 @@ class FacePreviewWidget extends StatelessWidget {
                               height: cellSize * 0.3,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withValues(alpha: 0.2),
                               ),
                             ),
                           )
@@ -201,14 +201,14 @@ class FaceTile extends StatelessWidget {
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
           color: isActive
-              ? Colors.cyanAccent.withOpacity(0.15)
-              : Colors.white.withOpacity(0.05),
+              ? Colors.cyanAccent.withValues(alpha: 0.15)
+              : Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isActive
                 ? Colors.cyanAccent
                 : isScanned
-                    ? Colors.greenAccent.withOpacity(0.5)
+                    ? Colors.greenAccent.withValues(alpha: 0.5)
                     : Colors.white12,
             width: isActive ? 2 : 1,
           ),
